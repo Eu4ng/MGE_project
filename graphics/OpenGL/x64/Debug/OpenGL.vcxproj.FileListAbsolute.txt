@@ -1,0 +1,3 @@
+C:\Users\wjdgn\source\repos\OpenGL\x64\Debug\OpenGL.exe
+D:\MGE_Graphic\x64\Debug\OpenGL.exe
+E:\Git\MGE_project\graphics\OpenGL\x64\Debug\OpenGL.exe
