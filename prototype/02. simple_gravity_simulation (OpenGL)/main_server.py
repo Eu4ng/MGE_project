@@ -7,7 +7,7 @@ import socket, threading
 _gravity = [[0, -9.8]]
 gravity = CheckShape2D("gravity", _gravity)
 
-tick = 0.125 # 1tick for 0.125seconds
+tick = 0.0125 # 1tick for 0.125seconds
 
 client_sockets = [] # 서버에 접속한 클라이언트 목록
 

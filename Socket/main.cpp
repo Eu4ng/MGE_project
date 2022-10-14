@@ -15,6 +15,7 @@ struct GameObject
 };
 
 void func1() {
+	cout << test << endl;
 	MySocket s;
 	s.Init();
 	s.Connect();
