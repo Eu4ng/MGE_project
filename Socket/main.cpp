@@ -1,47 +1,17 @@
 #pragma comment(lib,"ws2_32.lib")
 
 #include <iostream>
-#include <WinSock2.h>
 #include <thread>
+#include <map>
+#include "rapidjson/document.h"
 
-#define SERVER_IP "127.0.0.1"
-#define PORT 5050
-#define PACKET_SIZE 1024
+#include "MySocket.h"
+using namespace std;
 
-class MySocket
+struct GameObject
 {
-	private:
-		WSADATA wsaData;
-		SOCKET hSocket;
-		SOCKADDR_IN tAddr = {};
-		char cBuffer[PACKET_SIZE] = {};
-
-	public:
-		void Init() {
-			WSAStartup(MAKEWORD(2, 2), &this->wsaData);
-			this->hSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-			this->tAddr.sin_family = AF_INET;
-			this->tAddr.sin_port = htons(PORT);
-			this->tAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
-		}
-
-		void Connect() {
-			connect(this->hSocket, (SOCKADDR*)&this->tAddr, sizeof(this->tAddr));
-		}
-
-		void Send(char cMsg[]) {
-			send(this->hSocket, cMsg, strlen(cMsg), 0);
-		}
-
-		void Recv() {
-			recv(this->hSocket, this->cBuffer, PACKET_SIZE, 0);
-			printf("Recv Msg : %s\n", this->cBuffer);
-		}
-		
-		void DisConnect() {
-			closesocket(this->hSocket);
-			WSACleanup();
-		}
+	string name;
+	float x, y;
 };
 
 void func1() {
@@ -49,7 +19,23 @@ void func1() {
 	s.Init();
 	s.Connect();
 	while (true) {
-		s.Recv();
+		std::string data = s.Recv();
+		std::cout << data << std::endl;
+		rapidjson::Document doc;
+		doc.Parse(data.c_str());
+		if (doc.HasParseError())
+		{
+			std::cout << "json data parsing failed";
+		}
+
+		// C++ 11 이상 문법
+		for (auto& v : doc.GetArray())
+		{
+			GameObject tem;
+			tem.name = v["name"].GetString();
+			tem.x = v["pos"][0].GetFloat();
+			tem.y = v["pos"][1].GetFloat();
+		}
 	}
 }
 
